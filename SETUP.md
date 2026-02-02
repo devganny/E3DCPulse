@@ -6,7 +6,6 @@
 - Xcode 15.0 oder neuer
 - iOS 17.0 SDK (in Xcode enthalten)
 - Ein E3DC S10e System im lokalen Netzwerk
-- Git (in Xcode Command Line Tools enthalten)
 
 ## Schritt 1: Repository klonen
 
@@ -15,114 +14,49 @@ git clone https://github.com/devganny/E3DCPulse.git
 cd E3DCPulse
 ```
 
-## Schritt 2: Xcode Projekt erstellen
+## Schritt 2: Projekt in Xcode öffnen
 
-Da das Xcode-Projektfile (.xcodeproj) nicht im Git enthalten ist (es enthält maschinenspezifische Pfade), musst du es einmalig erstellen:
+Das Xcode-Projekt ist im Repository enthalten. Einfach per Doppelklick öffnen:
 
-### Option A: Neues Xcode Projekt um die vorhandenen Dateien erstellen
+```bash
+open E3DCPulse.xcodeproj
+```
 
-1. **Xcode öffnen** und `File > New > Project...` wählen
-2. Template: **iOS > App** auswählen, `Next` klicken
-3. Projekt-Einstellungen:
-   - **Product Name**: `E3DCPulse`
-   - **Team**: Dein Apple Developer Account (oder Personal Team)
-   - **Organization Identifier**: z.B. `com.deinname` (frei wählbar)
-   - **Interface**: `SwiftUI`
-   - **Language**: `Swift`
-   - **Storage**: `None`
-   - Alle Checkboxen (Tests etc.) können an bleiben oder abgewählt werden
-4. **Speicherort**: Wähle einen temporären Ordner (z.B. Desktop)
-5. `Create` klicken
+Oder in Xcode: `File > Open...` und die Datei `E3DCPulse.xcodeproj` auswählen.
 
-### Schritt 3: Quelldateien aus dem Git-Repo einbinden
+## Schritt 3: Signing konfigurieren
 
-1. Im Xcode Projekt-Navigator (linke Seitenleiste):
-   - **Lösche** die automatisch erstellten Dateien:
-     - `ContentView.swift` (die Standard-Datei)
-     - `E3DCPulseApp.swift` (die Standard-Datei)
-     - `Assets.xcassets` (den Standard-Ordner)
-   - Wähle bei der Lösch-Nachfrage **"Move to Trash"**
+1. In Xcode: Wähle das **Target** `E3DCPulse` (linke Seitenleiste, blaues Icon anklicken)
+2. Tab **Signing & Capabilities**
+3. **Team** auswählen (dein Personal Team oder Developer Account)
+4. Xcode passt den Bundle Identifier automatisch an
 
-2. **Dateien aus dem Git-Repo hinzufügen**:
-   - Rechtsklick auf das `E3DCPulse` Ziel im Navigator > `Add Files to "E3DCPulse"...`
-   - Navigiere zum geklonten Repository-Ordner: `E3DCPulse/E3DCPulse/`
-   - Wähle folgende Dateien und Ordner aus (**NICHT** die `Info.plist`!):
-     - `E3DCPulseApp.swift`
-     - `ContentView.swift`
-     - `Views/` (Ordner)
-     - `Models/` (Ordner)
-     - `RSCP/` (Ordner)
-     - `Assets.xcassets` (Ordner)
-   - Einstellungen im Dialog:
-     - **Copy items if needed**: ✅ Aktiviert
-     - **Create groups**: ✅ Ausgewählt (nicht "Create folder references")
-     - **Add to targets**: `E3DCPulse` ✅ angehakt
-   - `Add` klicken
+## Schritt 4: Build & Run
 
-### Option B: Projekt direkt im Repository-Ordner erstellen (einfacher)
-
-1. **Xcode öffnen** und `File > New > Project...` wählen
-2. Template: **iOS > App**, `Next`
-3. Projekt-Einstellungen wie in Option A
-4. **Speicherort**: Wähle den übergeordneten Ordner des geklonten Repos
-   - Also wenn das Repo unter `/Users/du/Developer/E3DCPulse` liegt,
-     wähle `/Users/du/Developer/` als Speicherort
-   - Xcode wird melden, dass der Ordner bereits existiert - bestätige dies
-5. **Lösche** die Auto-generierten Standard-Dateien
-6. Rechtsklick > `Add Files to "E3DCPulse"...` und füge alle Dateien aus dem `E3DCPulse/` Unterordner hinzu wie in Option A beschrieben
-
-## Schritt 4: Projekt konfigurieren
-
-### Netzwerk-Berechtigung setzen (wichtig!)
-
-Die `Info.plist` Datei aus dem Repo wird **NICHT** ins Projekt aufgenommen, da Xcode 15+
-eine eigene Info.plist automatisch generiert. Stattdessen den Key direkt im Target setzen:
-
-1. Wähle das Target (z.B. `E3DCPulse`) im **Project Navigator**
-2. Klicke auf den Tab **Info**
-3. Unter **Custom iOS Target Properties** auf das **+** klicken
-4. Key auswählen: **Privacy - Local Network Usage Description**
-5. Als Wert eingeben: `E3DC Pulse benötigt Zugriff auf das lokale Netzwerk, um mit dem E3DC Hauskraftwerk zu kommunizieren.`
-
-> **Hinweis**: Füge NICHT die `Info.plist` Datei aus dem Repo als Datei zum Projekt hinzu!
-> Xcode 15+ verwaltet die Info.plist intern. Das gleichzeitige Vorhandensein einer
-> Datei und der automatisch generierten plist führt zum Fehler:
-> `Multiple commands produce '...Info.plist'`
-
-### Deployment Target
-1. Target auswählen > Tab **General**
-2. **Minimum Deployments**: `iOS 17.0` (oder neuer)
-
-### Signing
-1. Target > Tab **Signing & Capabilities**
-2. **Team** auswählen (Personal Team oder Developer Account)
-3. **Bundle Identifier**: z.B. `com.deinname.E3DCPulse`
-
-## Schritt 5: Build & Run
-
-1. Wähle ein **iPhone Simulator** oder ein verbundenes iPhone als Zielgerät
-2. `Cmd+B` zum Bauen oder `Cmd+R` zum Ausführen
-3. **Hinweis**: Auf dem Simulator kann keine echte TCP-Verbindung zum E3DC aufgebaut werden, da der Simulator keinen Zugang zum lokalen Netzwerk hat. Teste auf einem echten Gerät!
+1. Wähle ein verbundenes **iPhone** als Zielgerät (oben in der Toolbar)
+2. `Cmd+R` zum Ausführen
+3. **Wichtig**: Auf dem Simulator funktioniert keine TCP-Verbindung zum E3DC im lokalen Netzwerk. Teste auf einem echten Gerät!
 
 ## Projektstruktur
 
 ```
 E3DCPulse/
-├── E3DCPulseApp.swift          # App Entry Point
-├── ContentView.swift            # Root View mit NavigationStack
-├── Assets.xcassets/             # App Icons und Farben
-├── Views/
-│   └── ConnectionView.swift     # Verbindungs-UI und Batterie-Anzeige
-├── Models/
-│   ├── BatteryInfo.swift        # Batterie- und DCB-Datenmodelle
-│   └── ConnectionSettings.swift # Verbindungseinstellungen (persistent)
-└── RSCP/
-    ├── Rijndael256.swift        # Rijndael-256 Verschlüsselung (32-Byte Blöcke)
-    ├── RSCPEncryption.swift     # (in Rijndael256.swift enthalten) CBC-Modus
-    ├── RSCPType.swift           # RSCP Datentypen
-    ├── RSCPTag.swift            # RSCP Tag-Definitionen
-    ├── RSCPFrame.swift          # Frame Encoder/Decoder + CRC32
-    └── RSCPConnection.swift     # TCP-Verbindung + Authentifizierung + Abfragen
+├── E3DCPulse.xcodeproj/        # Xcode Projekt (fertig konfiguriert)
+└── E3DCPulse/
+    ├── E3DCPulseApp.swift       # App Entry Point
+    ├── ContentView.swift        # Root View mit NavigationStack
+    ├── Assets.xcassets/         # App Icons und Farben
+    ├── Views/
+    │   └── ConnectionView.swift # Verbindungs-UI und Batterie-Anzeige
+    ├── Models/
+    │   ├── BatteryInfo.swift        # Batterie- und DCB-Datenmodelle
+    │   └── ConnectionSettings.swift # Verbindungseinstellungen (persistent)
+    └── RSCP/
+        ├── Rijndael256.swift    # Rijndael-256 Verschlüsselung (32-Byte Blöcke)
+        ├── RSCPType.swift       # RSCP Datentypen
+        ├── RSCPTag.swift        # RSCP Tag-Definitionen
+        ├── RSCPFrame.swift      # Frame Encoder/Decoder + CRC32
+        └── RSCPConnection.swift # TCP-Verbindung + Authentifizierung + Abfragen
 ```
 
 ## Verwendung
