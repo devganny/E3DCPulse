@@ -46,14 +46,13 @@ Da das Xcode-Projektfile (.xcodeproj) nicht im Git enthalten ist (es enthält ma
 2. **Dateien aus dem Git-Repo hinzufügen**:
    - Rechtsklick auf das `E3DCPulse` Ziel im Navigator > `Add Files to "E3DCPulse"...`
    - Navigiere zum geklonten Repository-Ordner: `E3DCPulse/E3DCPulse/`
-   - Wähle **ALLE** Dateien und Ordner aus:
+   - Wähle folgende Dateien und Ordner aus (**NICHT** die `Info.plist`!):
      - `E3DCPulseApp.swift`
      - `ContentView.swift`
      - `Views/` (Ordner)
      - `Models/` (Ordner)
      - `RSCP/` (Ordner)
      - `Assets.xcassets` (Ordner)
-     - `Info.plist`
    - Einstellungen im Dialog:
      - **Copy items if needed**: ✅ Aktiviert
      - **Create groups**: ✅ Ausgewählt (nicht "Create folder references")
@@ -74,28 +73,30 @@ Da das Xcode-Projektfile (.xcodeproj) nicht im Git enthalten ist (es enthält ma
 
 ## Schritt 4: Projekt konfigurieren
 
-### Info.plist einbinden
-1. Wähle das **E3DCPulse** Target in den Projekt-Einstellungen
-2. Gehe zum Tab **Info**
-3. Unter **Custom iOS Target Properties**:
-   - Falls die `Info.plist` Datei nicht automatisch erkannt wurde:
-     - Gehe zu **Build Settings** > suche nach "Info.plist"
-     - Setze **Info.plist File** auf: `E3DCPulse/Info.plist`
+### Netzwerk-Berechtigung setzen (wichtig!)
+
+Die `Info.plist` Datei aus dem Repo wird **NICHT** ins Projekt aufgenommen, da Xcode 15+
+eine eigene Info.plist automatisch generiert. Stattdessen den Key direkt im Target setzen:
+
+1. Wähle das Target (z.B. `E3DCPulse`) im **Project Navigator**
+2. Klicke auf den Tab **Info**
+3. Unter **Custom iOS Target Properties** auf das **+** klicken
+4. Key auswählen: **Privacy - Local Network Usage Description**
+5. Als Wert eingeben: `E3DC Pulse benötigt Zugriff auf das lokale Netzwerk, um mit dem E3DC Hauskraftwerk zu kommunizieren.`
+
+> **Hinweis**: Füge NICHT die `Info.plist` Datei aus dem Repo als Datei zum Projekt hinzu!
+> Xcode 15+ verwaltet die Info.plist intern. Das gleichzeitige Vorhandensein einer
+> Datei und der automatisch generierten plist führt zum Fehler:
+> `Multiple commands produce '...Info.plist'`
 
 ### Deployment Target
-1. Target `E3DCPulse` auswählen > Tab **General**
+1. Target auswählen > Tab **General**
 2. **Minimum Deployments**: `iOS 17.0` (oder neuer)
 
 ### Signing
-1. Target `E3DCPulse` > Tab **Signing & Capabilities**
+1. Target > Tab **Signing & Capabilities**
 2. **Team** auswählen (Personal Team oder Developer Account)
 3. **Bundle Identifier**: z.B. `com.deinname.E3DCPulse`
-
-### Network Permission (wichtig!)
-Die `Info.plist` enthält bereits den `NSLocalNetworkUsageDescription` Key.
-Falls Xcode diesen nicht automatisch erkennt:
-1. Target > **Signing & Capabilities** > `+ Capability`
-2. Suche und füge hinzu: **Local Network** (falls verfügbar)
 
 ## Schritt 5: Build & Run
 
@@ -109,7 +110,6 @@ Falls Xcode diesen nicht automatisch erkennt:
 E3DCPulse/
 ├── E3DCPulseApp.swift          # App Entry Point
 ├── ContentView.swift            # Root View mit NavigationStack
-├── Info.plist                   # Netzwerk-Berechtigungen
 ├── Assets.xcassets/             # App Icons und Farben
 ├── Views/
 │   └── ConnectionView.swift     # Verbindungs-UI und Batterie-Anzeige
