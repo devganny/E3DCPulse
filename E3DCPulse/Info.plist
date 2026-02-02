@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>E3DC Pulse benötigt Zugriff auf das lokale Netzwerk, um mit dem E3DC Hauskraftwerk zu kommunizieren.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_rscp._tcp</string>
+	</array>
+</dict>
+</plist>
